@@ -1,0 +1,20 @@
+<!-- turtlebot3_teleop package modified by MO to use keyboard to publish to 
+     /cmd_vel for jimmy-->
+<launch>
+
+  <!-- turtlebot3_teleop_key already has its own built in velocity smoother
+       note: launch-prefix allows this package to open in a new terminal windoe
+       note: had to remap to publish to topic for jimmy's drive wheels. -->
+  <node 
+      pkg="turtlebot3_teleop_modified" 
+      type="turtlebot3_teleop_key" 
+      name="jimmy_teleop_keyboard"  
+      output="screen"
+      ns="jimmy_mobile_base_controller"
+      launch-prefix="gnome-terminal -e ">
+	  <!--got this done with the ns tag. See: 
+          https://wiki.ros.org/roslaunch/XML/node#Attributes-->
+      <!--remap from="cmd_vel" to="jimmy_mobile_base_controller/cmd_vel"/-->
+  </node>
+ 
+</launch>

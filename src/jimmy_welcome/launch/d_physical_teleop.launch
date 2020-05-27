@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    
+	<!--This allows us to connect gazebo cmd_vel topic with the teleop cmd_vel topic,
+        and it has to be done before we call the gazebo launch file.-->
+    <remap from="cmd_vel" to="jimmy_mobile_base_controller/cmd_vel"/>
+
+    <!--launch the diff drive controller so that you can drive the robot around.
+        also the 3D lidar system comes to life.-->
+    <include file="$(find jimmy_base)/launch/mobile_base_and_lidar.launch"/>
+
+    <!--load up RViz with many of the needed tools to understand how the 
+        robot is "understanding" it's environment. This setup is quite simple.-->
+    <include file="$(find jimmy_description)/launch/physical_jimmy_rviz_teleop.launch"/>
+
+    <!--give commands to Jimmy to drive around by publishing to the ~/cmd_vel topic-->
+    <include file="$(find turtlebot3_teleop_modified)/launch/turtlebot3_teleop_key.launch"/>
+
+</launch>

@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>jimmy_welcome</name>
+  <version>0.0.0</version>
+  <description>
+          This package is a means to quickly run a demonstration of the
+          robot in it's physical iteration and in Gazebo. The purpose of this 
+          package is to easily run the project without having to know alot about
+          it, and to start to get a feel for the current capabilities of this
+          unit.
+  </description>
+
+  <author>MO</author>
+
+  <maintainer email="TorontoRoboticsClub@protonmail.com">MO</maintainer>
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>TODO</license>
+
+
+  <!-- HELP US!! we are looking for help with this project. Visit us at: -->
+  <url type="website">https://torontoroboticsclub.com/</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+</package>

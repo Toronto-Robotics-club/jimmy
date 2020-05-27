@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    
+<!--This allows us to connect gazebo cmd_vel topic with the teleop cmd_vel topic,
+        and it has to be done before we call the gazebo launch file.-->
+    <remap from="cmd_vel" to="jimmy_mobile_base_controller/cmd_vel"/>
+
+    <!--launch the diff drive controller so that you can drive the robot around.
+        also the 3D lidar system comes to life.-->
+    <include file="$(find jimmy_base)/launch/mobile_base_and_lidar.launch"/>
+
+    <!--load up RViz with many of the needed tools to understand how the 
+        robot is "understanding" it's environment. This setup is the previous
+        setup with the addition of a static map layer (the map you are building)-->
+    <include file="$(find jimmy_description)/launch/physical_jimmy_rviz_navigation_on_map.launch"/>
+
+    <!--AMCL uses the lidar data to localize on the map. At this point in the 
+        project you still have to tell rviz the location of the robot on the 
+        static map via the "2D Pose Estimate" button.-->
+    <include file="$(find jimmy_navigation)/launch/amcl_demo_physical_robot.launch"/>
+
+</launch>

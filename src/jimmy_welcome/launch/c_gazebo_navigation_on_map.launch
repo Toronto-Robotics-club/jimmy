@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    
+    <!--launch the gazebo simulation with jimmy in turtlebot's playground-->
+    <include file="$(find jimmy_gazebo)/launch/jimmy_in_turtlebot_world.launch"/>
+
+    <!--load up RViz with many of the needed tools to understand how the 
+        robot is "understanding" it's environment-->
+    <include file="$(find jimmy_description)/launch/gazebo_jimmy_rviz_navigation_to_goal.launch"/>
+
+    <!--to localize on the map we need an AMCL node-->
+    <include file="$(find jimmy_navigation)/launch/amcl_demo_gazebo.launch"/>
+
+</launch>

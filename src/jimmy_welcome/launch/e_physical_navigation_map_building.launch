@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    
+	<!--This allows us to connect gazebo cmd_vel topic with the teleop cmd_vel topic,
+        and it has to be done before we call the gazebo launch file.-->
+    <remap from="cmd_vel" to="jimmy_mobile_base_controller/cmd_vel"/>
+
+    <!--launch the diff drive controller so that you can drive the robot around.
+        also the 3D lidar system comes to life.-->
+    <include file="$(find jimmy_base)/launch/mobile_base_and_lidar.launch"/>
+
+    <!--load up RViz with many of the needed tools to understand how the 
+        robot is "understanding" it's environment. This setup is the previous
+        setup with the addition of a static map layer (the map you are building)-->
+    <include file="$(find jimmy_description)/launch/physical_jimmy_rviz_navigation_map_building.launch"/>
+
+    <!--give commands to Jimmy to drive around by publishing to the ~/cmd_vel topic-->
+    <include file="$(find turtlebot3_teleop_modified)/launch/turtlebot3_teleop_key.launch"/>
+
+    <!--gmapping allows us to take odometry data, and the lidar data and build a map-->
+    <include file="$(find jimmy_navigation)/launch/gmapping.launch"/>
+
+    <!--NOTE: once you build the map you must save it with the command: 
+        rosrun map_server map_saver -f ~/Desktop/workspace/src/jimmy_navigation/maps/MAP_NAME
+        where MAP_NAME is the name of your map, and your path to your jimmy_navigation
+        directory will be different -->
+
+</launch>
