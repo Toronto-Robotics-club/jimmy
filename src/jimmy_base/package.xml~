@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<package>
+  <name>jimmy_base</name>
+  <version>0.0.1</version>
+  <description>
+    The jimmy_base package. Modeled on Emiliano Borghi's git project.
+  </description>
+
+  <maintainer email="TorontoRoboticsClub@protonmail.com">
+    MO
+  </maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <!--I organized each build & run dependencies as pairs  -->
+  <build_depend>roscpp</build_depend>
+  <run_depend>roscpp</run_depend>
+  
+  <!--This was in my 'manual_operation' package so I added it just in case  -->
+  <build_depend>std_msgs</build_depend>
+  <run_depend>std_msgs</run_depend>
+
+  <build_depend>controller_manager</build_depend>
+  <run_depend>controller_manager</run_depend>
+
+  <build_depend>hardware_interface</build_depend>
+  <run_depend>hardware_interface</run_depend>
+
+  <build_depend>trajectory_msgs</build_depend>
+  <run_depend>trajectory_msgs</run_depend>
+  
+  <!--*************TO DO: i suspect this can be deleted. check later.-->
+  <build_depend>roslaunch</build_depend>
+  
+  <!--these two lines are needed to use custom messages (from manual_operation)-->
+  <build_depend>message_generation</build_depend>
+  <run_depend>message_runtime</run_depend>
+  
+  <!--this is needed to use a library (methods from another ros package) -->
+  <build_depend>jimmycpp</build_depend>
+  <run_depend>jimmycpp</run_depend>
+  
+  <run_depend>effort_controllers</run_depend>
+  
+  <!-- Very important for this kind of robot!! -->
+  <run_depend>diff_drive_controller</run_depend>
+
+  <!--************TO DO: i suspect this can be deleted. check later.-->
+  <export> </export>
+</package>

@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<package>
+  <name>jimmy_base</name>
+  <version>0.0.1</version>
+  <description>
+    The jimmy_base package. This package is the hardware_interface 
+    (see: https://wiki.ros.org/ros_control) for the jimmy robot. This package is 
+    a middle man between a diff_drive controller and the jimmycpp library. It is
+    modeled on Emiliano Borghi's git project (can be seen here: 
+    https://github.com/eborghi10/my_ROS_mobile_robot), and on Dave Coleman's
+    boilerplate (seen here: https://github.com/PickNikRobotics/ros_control_boilerplate),
+    and heavily modified by MO. If you see any errors or omissions, please 
+    contact the maintainer! Feedback is appriciated.
+  </description>
+
+  <maintainer email="TorontoRoboticsClub@protonmail.com">
+    MO
+  </maintainer>
+
+  <!-- maintener website -->
+  <url type="website">http://TorontoRoboticsClub.com</url>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <!--I organized each build & run dependencies as pairs  -->
+  <build_depend>roscpp</build_depend>
+  <run_depend>roscpp</run_depend>
+  
+  <build_depend>controller_manager</build_depend>
+  <run_depend>controller_manager</run_depend>
+
+  <build_depend>hardware_interface</build_depend>
+  <run_depend>hardware_interface</run_depend>
+
+  <build_depend>trajectory_msgs</build_depend>
+  <run_depend>trajectory_msgs</run_depend>
+  
+  <!--this is needed to use a library (methods from another ros package) -->
+  <build_depend>jimmycpp</build_depend>
+  <run_depend>jimmycpp</run_depend>
+  
+  <!-- Very important for this kind of robot!! -->
+  <run_depend>diff_drive_controller</run_depend>
+
+</package>

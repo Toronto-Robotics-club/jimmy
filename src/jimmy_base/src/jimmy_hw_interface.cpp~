@@ -1,0 +1,226 @@
+/*
+*  Purpose: demonstrate a minimal example of a diff_drive controller
+*  Author: Emiliano Borghi, MO
+*          MO took the original code and modified it to suit the TorontoRoboticsClub.com
+*          project. 
+*  Date: Dec 29, 2019
+*
+*
+*
+*/
+
+#include <jimmy_hw_interface.h>
+
+///implementation of JimmyHWInterface constructor. The 4 items after the colon 
+/// are a means to initialize member variables of the class the constructor is
+/// a part of. This is called "dirct initialization of member variables". See:
+///https://www.learncpp.com/cpp-tutorial/8-5a-constructor-member-initializer-lists/
+///The items initialized are:
+///service server is running: true
+JimmyHWInterface::JimmyHWInterface() 
+{
+ 
+    // Intialize raw data
+    ///this std lib function fills arrays (arg 1), for a number of elements (arg 2)
+    /// a specific value (arg 3). Basically here we are assigning all our 
+    ///JointState statuses with 0.0.
+    std::fill_n(pos, NUM_JOINTS, 0.0);
+    std::fill_n(vel, NUM_JOINTS, 0.0);
+    std::fill_n(eff, NUM_JOINTS, 0.0);
+    std::fill_n(cmd, NUM_JOINTS, 0.0);
+
+    // connect and register the joint state and velocity interfaces. for more info see:
+    ///https://github.com/ros-controls/ros_control/wiki/hardware_interface. Basically
+    /// connect the interface to the resouces and the URDF; and give access to control manager
+    
+    ///*******************************LEFT WHEEL "resource"****************************
+    ///the resource name for the left wheel as in the URDF
+    std::string left_wheel = "base_to_left_drive_wheel_joint";
+    ///This is a joint state interface; which means that this gives the 
+    ///controller manager node access to the joint state of the robot.
+    hardware_interface::JointStateHandle state_handle_left(left_wheel, &pos[LEFT], &vel[LEFT], &eff[LEFT]);
+    jnt_state_interface.registerHandle(state_handle_left);
+    ///My understanding is that here, we are giving the controller manager 
+    ///node access to the command (the memory which tells the joint what to
+    ///do) part of the array.
+    hardware_interface::JointHandle vel_handle_left_wheel(jnt_state_interface.getHandle(left_wheel), &cmd[LEFT]);
+    jnt_vel_interface.registerHandle(vel_handle_left_wheel);
+
+    ///*******************************RIGHT WHEEL "resource"****************************
+    //the resource name for the right wheel as in the URDF
+    std::string right_wheel = "base_to_right_drive_wheel_joint";
+    ///This is a joint state interface; which means that this gives the 
+    ///controller manager node access to the joint state of the robot.
+    hardware_interface::JointStateHandle state_handle_right(right_wheel, &pos[RIGHT], &vel[RIGHT], &eff[RIGHT]);
+    jnt_state_interface.registerHandle(state_handle_right);
+    ///My understanding is that here, we are giving the controller manager 
+    ///node access to the command (the memory which tells the joint what to
+    ///do) part of the array.
+    hardware_interface::JointHandle vel_handle_right_wheel(jnt_state_interface.getHandle(right_wheel), &cmd[RIGHT]);
+    jnt_vel_interface.registerHandle(vel_handle_right_wheel);
+       
+    registerInterface(&jnt_state_interface); //access to state of joint.(pos[], vel[], eff[])
+    registerInterface(&jnt_vel_interface); //access to giving joint commands (cmd[])
+   
+}
+
+//Reading encoder values and setting position and velocity of enconders 
+///The read method is going to get data from the robot hardware so that the 
+///controller can correct the commands to better reach the desired objective.
+void JimmyHWInterface::read(const ros::Duration &period) 
+{
+    
+    //send a status update request to the arduino, and get all the data from the arduino.
+    jimmycppArduinoObj.getDataFromArduino(AA_request);
+    
+    //Reset the encoder data that we were storing:
+	rightWheelEncReading_deg = 0.0;
+    leftWheelEncReading_deg = 0.0;
+
+    //get the current degrees from arduino:
+    rightWheelEncReading_deg = jimmycppArduinoObj.getRightWheelPositionInDegrees();
+	leftWheelEncReading_deg = jimmycppArduinoObj.getLeftWheelPositionInDegrees();
+
+    //reset old data that was stored in radians
+	rightWheelEncReading_rad = 0.0;
+    leftWheelEncReading_rad = 0.0;
+
+    //convert the degree values we got from arduino into radians:
+    //store the position of the wheels as gotten from arduino in radians.
+    rightWheelEncReading_rad = rightWheelEncReading_deg * degToRadConst;
+	leftWheelEncReading_rad = leftWheelEncReading_deg * degToRadConst;
+
+    //troubleshooting only TO BE REPLACED WITH LOWER SEVERITY LOG MESSAGE.
+    ROS_FATAL_STREAM("Encoder value from Arduino (right enc) DEG: " << rightWheelEncReading_deg);
+    ROS_FATAL_STREAM("Encoder value from Arduino (right enc) RAD: " << rightWheelEncReading_rad);
+
+    //troubleshooting only TO BE REPLACED WITH LOWER SEVERITY LOG MESSAGE.
+    ROS_FATAL_STREAM("Encoder value from Arduino (left enc) DEG: " << leftWheelEncReading_deg);
+    ROS_FATAL_STREAM("Encoder value from Arduino (left enc) RAD: " << leftWheelEncReading_rad);
+
+        
+    /*
+    //All methods available from arduino
+    std::cout << "right motion direction: " << myObj.getRightWheelDirectionOfMotion() << std::endl;
+    std::cout << "right encoder pulses since start: " << myObj.getRightWheelEncoderCountSinceStart() << std::endl;
+    std::cout << "right motion status: " << myObj.getRightWheelMotionStatus() << std::endl;
+    std::cout << "right position in degrees: " << myObj.getRightWheelPositionInDegrees() << std::endl;
+    std::cout << "left motion direction: " << myObj.getLeftWheelDirectionOfMotion() << std::endl;
+    std::cout << "left encoder pulses since start: " << myObj.getLeftWheelEncoderCountSinceStart() << std::endl;
+    std::cout << "left motion status: " << myObj.getLeftWheelMotionStatus() << std::endl;
+    std::cout << "left position in degrees: " << myObj.getLeftWheelPositionInDegrees() << std::endl;
+    */
+
+    //write robot data to the right structure.
+    //0=left, 1=right
+    pos[LEFT] = leftWheelEncReading_rad;
+    vel[LEFT] = leftWheelEncReading_rad / period.toSec();
+    pos[RIGHT] = rightWheelEncReading_rad;
+    vel[RIGHT] = rightWheelEncReading_rad / period.toSec();
+}//end of read
+
+/// I believe this method is how we send commands to the hardware. 
+void JimmyHWInterface::write() 
+{
+    /// cmd[int] - this is the command that is returned to us by the 
+    /// diff_drive controller. Lets store the values to make sure they are safe. 
+    double diff_speed_left = cmd[LEFT];
+    double diff_speed_right = cmd[RIGHT];
+
+    //troubleshooting only TO BE REPLACED WITH LOWER SEVERITY LOG MESSAGE.
+    ROS_FATAL_STREAM("left wheel command: " << cmd[LEFT]);
+    ROS_FATAL_STREAM("right wheel command: " << cmd[RIGHT]);
+
+    ///a function to control cases when the diff_drive gives speed values
+    ///which are larger than what the hardware can handle.
+    //The range on Jimmy is 1.2936 to -1.2936 radians per second
+    //limitDifferentialSpeed(diff_ang_speed_left, diff_ang_speed_right);
+
+    //*************************************************************************
+    //did right or left command exceed robot limits?
+    bool leftMaxCommandIssued = false;
+    bool rightMaxCommandIssued = false;
+    double speedReductionRatio = 0.0;
+
+    //1.2936 to -1.2936
+    if((diff_speed_left >= 1.2935) || (diff_speed_left <= -1.2935))
+    {
+        leftMaxCommandIssued = true;
+    }
+
+    //1.2936 to -1.2936
+    if((diff_speed_right >= 1.2935) || (diff_speed_right <= -1.2935))
+    {
+        rightMaxCommandIssued = true;
+    }
+
+    //if we hit the max value, then we need to fix up our YAML file, but for now
+    //the plan is to simply maintain the ratio of the commands to achieve the 
+    //correct motion at a slower speed. Here we figure out the ratio.
+    if((leftMaxCommandIssued==true) || (rightMaxCommandIssued==true))
+    {
+        //find which value is the largest magnitude via absolute values
+        double absLeft = std::abs(diff_speed_left);
+        double absRight = std::abs(diff_speed_right);
+        
+        //set teh speed reduction ration based on the larger max value.
+        if(absLeft >= absRight)
+        {
+            speedReductionRatio = (1.29/absLeft);
+        }
+
+        if(absLeft < absRight)
+        {
+            speedReductionRatio = (1.29/absRight);
+        }
+        
+        //let the user know we have a problem
+         ROS_FATAL_STREAM("drive wheel command by diff_drive controller is excessive!! fix yaml file");
+    }
+
+    //if we didn't have an excessive speed command, then send the command to the drives
+    // via jimmy cpp:
+    if(speedReductionRatio == 0.0)
+    {
+        //Send command to left stepper drive
+        jimmycppAmpSteppersObj.processControllerCommandAndSendToLeftDrive(cmd[LEFT]);
+        //send command to right stepper drive
+        jimmycppAmpSteppersObj.processControllerCommandAndSendToRightDrive(cmd[RIGHT]);
+    }
+
+    //we need to done down te speeds, but still keep the ratio the same so that
+    // the motion trajectory is the same, but the velocity is acceptable for the
+    // hardware. 
+    if(speedReductionRatio != 0.0)
+    {
+        //step down the speeds for both wheels proportionally, so that we maintain
+        //the correct ratio, but are below the max physical speed of the robot.
+        diff_speed_left = diff_speed_left * speedReductionRatio;
+        diff_speed_right = diff_speed_right * speedReductionRatio;
+
+        //Send command to left stepper drive
+        jimmycppAmpSteppersObj.processControllerCommandAndSendToLeftDrive(diff_speed_left);
+        //send command to right stepper drive
+        jimmycppAmpSteppersObj.processControllerCommandAndSendToRightDrive(diff_speed_right);
+    }
+} //end of write()
+
+
+
+
+///This method stored ros::Time type data into two variables. One variable is
+/// holding time of last update, and other variable is holding the time right
+/// now. This method returns the time right now. 
+ros::Time JimmyHWInterface::get_time() 
+{
+    prev_update_time = curr_update_time;
+    curr_update_time = ros::Time::now();
+    return curr_update_time;
+}
+  
+///compute the duration between the previous update, and the current time; 
+/// where it is likely we are also doing an update at the current time.  
+ros::Duration JimmyHWInterface::get_period() 
+{
+    return curr_update_time - prev_update_time;
+}

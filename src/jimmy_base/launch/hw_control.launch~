@@ -1,0 +1,24 @@
+<!-- MO -->
+
+<launch>
+
+	<!-- Load robot model -->
+	<param name="robot_description" command="$(find xacro)/xacro '$(find jimmy_description)/urdf/jimmy.xacro' --inorder"/>
+
+    <node name="jimmy_base_node" 
+          pkg="jimmy_base" 
+          type="jimmy_base"/>
+
+    <!-- Load controller config. this is the yaml file with the 
+    diff_drive_controller.  -->
+    <rosparam command="load" file="$(find jimmy_control)/config/jimmy_common.yaml"/>
+
+    <!--make sure the arg "mobile_base_controller" is the same name as in the
+    yaml file in "jimmy_common.yaml".-->
+    <node name="controller_spawner" 
+          pkg="controller_manager" 
+          type="spawner" 
+          output="screen" 
+          args="mobile_base_controller"/> 
+          
+</launch>

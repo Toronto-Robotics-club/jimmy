@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+    
+    <!--===========================Load robot model======================================-->
+    <arg name="model" default="$(find jimmy_description)/urdf/jimmy.xacro" />
+    <!-- Converts the xacro robot information to UDRF and use it as a 
+    robot_description parameter. Note that it is a part of the robot_state_publisher-->
+    <param command="$(find xacro)/xacro --inorder $(arg model)" name="robot_description"/>
+
+
+    <!--=========================Mobile Base controller===================================-->
+    <!--This loads the diff_drive yaml configuration, and launches a controller manager
+    node that will activate the diff_drive controller -->
+    <include file="$(find jimmy_control)/launch/jimmy_control.launch"/>
+
+    <!--Launch the hardware interface node for the mobile base. This is the interface
+    between the diff_drive controller and the hardware (wheel motors & wheel encoders) -->
+    <node name="jimmy_base_node" 
+          pkg="jimmy_base" 
+          type="jimmy_base_node"/>
+
+    <!--=========================All Lidar related components=============================-->
+    <!--parameter to store the type of running project (virual/Gazebo or physicla/onboard robot).
+        since we are launching a jimmy_base node, it must be running on a physical robot. 
+        This parameter has an effect on the code the lidar system runs.-->
+    <param name="jimmy_ns/running_physical_robot" value="true"/>
+
+    <!--fire up the node responsible for publishing lidar encoder data, and stepper
+        motor control. NOTE: this package must run if I want RViz to work properly 
+       as the lidar publishes data that is need for transforms (without the data, RViz doesn't work). -->
+    <include file="$(find jimmy_hokuyo_lidar_control)/launch/hokuyo_lidar_control.launch"/>
+
+</launch>
