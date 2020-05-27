@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>jimmycpp</name>
+  <version>0.0.0</version>
+  <description> This package is a library to bridge the hardware and the ROS 
+                code. For example when a diff_drive controller sends a radian
+                per sec command for wheel velocity, this package will convert 
+                this value into a command the stepper driver understands and 
+                send the electrical signals need to achieve the desired velocity.
+                If you seen any issues please report it to the maintainer! I 
+                appriciate feedback.
+  </description>
+
+  <author> MO </author>
+
+  <!-- One maintainer tag required, multiple allowed, one person per tag -->
+  <maintainer email="TorontoRoboticsClub@protonmail.com"> MO </maintainer>
+
+  <!-- One license tag required, multiple allowed, one license per tag -->
+  <!-- Commonly used license strings: -->
+  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
+  <license>TODO</license>
+
+  <!-- Url tags are optional, but multiple are allowed, one per tag -->
+  <url type="website">http://TorontoRoboticsClub.com</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <exec_depend>roscpp</exec_depend>
+
+</package>
