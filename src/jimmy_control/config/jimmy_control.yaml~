@@ -1,0 +1,11 @@
+# The PID gains and controller settings must be saved in a yaml file that gets 
+# loaded to the param server via the roslaunch file (jimmy_control.launch).
+
+jimmy:
+    #----------------------------Controller #1----------------------------------
+    # This contorller is needed to publish all the joint states to the 
+    # /joint_states topic.
+    joint_state_controller:
+        type: joint_state_controller/JointStateController
+        publish_rate: 50
+

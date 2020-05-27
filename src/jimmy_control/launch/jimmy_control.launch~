@@ -1,0 +1,39 @@
+<launch>
+
+  <!--=========DECLARE URDF FILE & LIST YAML FILE WITH CONTROLLER========-->
+
+  <!--declare the file from which we generate an URDF-->
+  <arg name="model" default="$(find jimmy_description)/urdf/jimmy.xacro" />
+
+  <!-- Load joint controller configurations from YAML file to parameter server -->
+  <rosparam file="$(find jimmy_control)/config/jimmy_control.yaml" command="load"/>
+
+                          <!-- LOAD THE CONTROLLERS -->
+  <!-- The controller_spawner node loads a third controller that 
+  publishes the joint states of all the joints with hardware_interfaces and 
+  advertises the topic on /joint_states. -->
+  <node name="controller_spawner"
+        pkg="controller_manager"
+        type="spawner" 
+        respawn="false"
+        output="screen"
+        ns="/jimmy" 
+        args="joint_state_controller"/>
+
+  <!-- convert joint states to TF transforms for rviz, etc -->
+  <!-- A robot_state_publisher node simply listens to /joint_states messages 
+  from the joint_state_controller then publishes the transforms to /tf. This 
+  allows you to see your simulated robot in Rviz as well as do other tasks.-->
+  <node name="robot_state_publisher" 
+        pkg="robot_state_publisher" 
+        type="robot_state_publisher" 
+        respawn="false" 
+        output="screen">
+
+  <!-- Converts the xacro robot information to UDRF and use it as a 
+  robot_description parameter. Note that it is a part of the robot_state_publisher-->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)" />
+        <remap from="/joint_states" to="/jimmy/joint_states" />
+  </node>
+
+</launch>

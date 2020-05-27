@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<package>
+  
+  <name>jimmy_control</name>
+  <version>0.0.1</version>
+  <description> This package is using the ros_cotrol library. The purpose of this
+                package is to start a controller_manager node that will start a 
+                diff_driver controller. The diff_drive controller is initialized
+                with the contents of a yaml file and interfaces with the 
+                hardware interface code in jimmy_base. This package used this 
+                project as guidance: https://github.com/eborghi10/my_ROS_mobile_robot                
+  </description>
+
+  <maintainer email="TorontoRoboticsClub@protonmail.com">MO</maintainer>
+
+  <!-- maintener website -->
+  <url type="website">http://TorontoRoboticsClub.com</url>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>controller_manager</build_depend>
+  <run_depend>controller_manager</run_depend>
+
+  <build_depend>roscpp</build_depend>
+  <run_depend>roscpp</run_depend>
+
+  <build_depend>hardware_interface</build_depend>
+  <run_depend>hardware_interface</run_depend>
+
+  <build_depend>trajectory_msgs</build_depend>
+  <run_depend>trajectory_msgs</run_depend>
+
+  
+  <run_depend>ros_controllers</run_depend>
+  <run_depend>effort_controllers</run_depend>
+  <run_depend>joint_state_controller</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+
+</package>

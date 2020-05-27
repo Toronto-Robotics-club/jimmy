@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<package>
+  
+  <name>jimmy_control</name>
+  <version>0.0.1</version>
+  <description>Hardware interface for the robot</description>
+
+  <maintainer email="TorontoRoboticsClub@protonmail.com">MO</maintainer>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>controller_manager</build_depend>
+  <run_depend>controller_manager</run_depend>
+
+  <build_depend>roscpp</build_depend>
+  <run_depend>roscpp</run_depend>
+
+  <build_depend>hardware_interface</build_depend>
+  <run_depend>hardware_interface</run_depend>
+
+  <build_depend>trajectory_msgs</build_depend>
+  <run_depend>trajectory_msgs</run_depend>
+
+  
+  <run_depend>ros_controllers</run_depend>
+  <run_depend>effort_controllers</run_depend>
+  <run_depend>joint_state_controller</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+
+  <!--these two are very suprising. I'll most likely remove them once
+  I get everything working-->
+  <run_depend>turtlebot_teleop</run_depend>
+  <run_depend>depthimage_to_laserscan</run_depend>
+
+</package>

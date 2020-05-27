@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+    <!--====================DECLARE YAML FILE WITH CONTROLLER====================-->
+    <!-- This is the yaml file with the diff_drive_controller configuration.  -->
+    <rosparam command="load" file="$(find jimmy_control)/config/jimmy_control.yaml"/>
+
+    <!--============================LOAD THE CONTROLLERS=========================-->
+    <!--This is the controller manager node. It loads the diff_drive controller for the 
+    jimmy_base_node. Make sure the arg "mobile_base_controller" is the same name as in the
+    yaml name of the controller file (for the diff_drive) in "jimmy_common.yaml".-->
+    <node name="controller_spawner" 
+          pkg="controller_manager" 
+          type="spawner" 
+          output="screen" 
+          args="jimmy_mobile_base_controller jimmy_joint_state_controller"/>
+
+</launch>

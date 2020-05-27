@@ -1,0 +1,41 @@
+#jimmy_ns is the name space
+jimmy_ns:
+    # based on https://wiki.ros.org/ros_control this controller reads the state 
+    # of all the joints
+    joint_state_controller:
+        type: joint_state_controller/JointStateController
+        publish_rate: 20
+
+    lidar_joint_position_controller:
+        #this controller recieves position and via PID it takes care of the effort
+        # needed to move the joint. based on https://wiki.ros.org/ros_control
+        #type position_controllers/JointPositionController
+        #Takes a speed and moves at that speed. PID allows the unit to run at that speed.
+        #type velocity_controllers/JointVelocityController
+        #This is very cool, where I pass in a position (in radians), and the velocity
+        #is taken care of (so is accel and decel) by the PID values.
+        type: velocity_controllers/JointPositionController 
+        joint: hokuyo_stepper_shaft_to_hokuyo_base_plate_joint
+        pid: {p: 1.0, i: 0.0, d: 0.0}
+
+    #adding ros_control controllers to get /tf data from gazebo for the caster 
+    #wheels.
+    left_caster_joint_pivot:
+        type: velocity_controllers/JointVelocityController
+        joint: left_castor_mount_to_left_castor_dummy_joint
+        pid: {p: 0.1, i: 0.0, d: 0.0}
+
+    left_caster_joint_roll:
+        type: velocity_controllers/JointVelocityController
+        joint: left_castor_dummy_to_left_castor_wheel_joint
+        pid: {p: 0.1, i: 0.0, d: 0.0}
+
+    right_caster_joint_pivot:
+        type: velocity_controllers/JointVelocityController
+        joint: right_castor_mount_to_right_castor_dummy_joint
+        pid: {p: 0.1, i: 0.0, d: 0.0}
+
+    right_caster_joint_roll:
+        type: velocity_controllers/JointVelocityController
+        joint: right_castor_dummy_to_right_castor_wheel_joint
+        pid: {p: 0.1, i: 0.0, d: 0.0}
