@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+
+    <!--Fire up the 2D lidar data from the physical lidar (urg)-->
+	<include file="$(find urg_node)/launch/urg_lidar.launch"/>
+
+    <!--Launch the node that takes care of the physical lidar motion and publishing
+        dummy data for the cator wheels to make RViz happy. -->
+    <node name="jimmy_hokuyo_lidar_control_mynode" 
+          pkg="jimmy_hokuyo_lidar_control" 
+          type="lidar_system_control"
+		  output="screen"/>
+       
+</launch>

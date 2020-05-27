@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<package>
+  <name>jimmy_hokuyo_lidar_control</name>
+  <version>0.0.1</version>
+  <description>
+    This package is an interface to the Hokuyo lidar system (the encoder and
+    motor; but not the actual hokuyo). This package pulls the individual lidar
+    components into a singular 3D lidar. If you see any issues please let the 
+    maintainer know. I appriciate feedback. 
+  </description>
+
+  <author> MO </author>
+
+  <maintainer email="TorontoRoboticsClub@protonmail.com">
+    MO
+  </maintainer>
+
+  <url type="website">http://TorontoRoboticsClub.com</url>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <!--I organized each build & run dependencies as pairs  -->
+  <build_depend>roscpp</build_depend>
+  <run_depend>roscpp</run_depend>
+  
+  <!--This was in my 'manual_operation' package so I added it just in case  -->
+  <build_depend>std_msgs</build_depend>
+  <run_depend>std_msgs</run_depend>
+
+  <build_depend>geometry_msgs</build_depend>
+  <run_depend>geometry_msgs</run_depend>
+
+
+  <build_depend>trajectory_msgs</build_depend>
+  <run_depend>trajectory_msgs</run_depend>
+
+  <!--these two lines are needed to use custom messages-->
+  <build_depend>message_generation</build_depend>
+  <run_depend>message_runtime</run_depend>
+  
+  <!--this is needed to use a library (methods from another ros package) -->
+  <build_depend>jimmycpp</build_depend>
+  <run_depend>jimmycpp</run_depend>
+
+
+</package>

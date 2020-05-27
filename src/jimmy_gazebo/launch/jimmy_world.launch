@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+
+  <arg name="model" default="$(find jimmy_description)/urdf/jimmy.xacro"/>
+  <arg name="world" default="empty"/> 
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+  <arg name="verbose" value="true"/>
+  
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find jimmy_gazebo)/worlds/jimmy.world"/>
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="headless" value="$(arg headless)"/>
+    <arg name="debug" value="$(arg debug)"/>
+    <!--by activating "verbose" mode, Gazebo prints more to terminal on launch.-->
+    <arg name="verbose" value="true"/>
+  </include>
+
+  <!--Converts the xacro robot information to UDRF and loads it into the parameter
+      server as "robot_description"
+  parameter-->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
+
+  <!--parameter to store the type of running project (virual/Gazebo or physicla/onboard robot).
+      since we are launching a gazebo node, it must be a virtual execution.
+      This parameter has an effect on the code the lidar system runs.-->
+  <param name="jimmy_ns/running_physical_robot" value="false"/>
+
+
+  <!--This line is based on moore robot tutorial. However I had to ask a question to 
+  get it working properly. See:
+  http://answers.gazebosim.org/question/24436/how-to-specify-urdf-link-which-attaches-to-world-ground/ -->
+  <node name="jimmy_spawner" 
+        pkg="gazebo_ros" 
+        type="spawn_model" 
+        respawn="false"
+        output="screen"
+        args="-urdf -param robot_description -model jimmy -x 0 -y 0 -z 0.29 - R 0 -P -0.03 -Y 0" />
+
+  <!-- load the controllers -->
+  <rosparam file="$(find jimmy_control)/config/jimmy_gazebo_control.yaml" command="load"/>
+
+  <!-- this node is the controller manager and it loads the controllers.
+       NOTE: "ns=/jimmy_ns" is from the jimmy_gazebo_control.yaml file; and so
+             are the two args in the "args="lidar_joint_po...."-->
+  <node name="controller_spawner" 
+        pkg ="controller_manager" 
+        type="spawner" 
+        ns="/jimmy_ns" 
+        args="lidar_joint_position_controller 
+              joint_state_controller
+              left_caster_joint_pivot
+              left_caster_joint_roll
+              right_caster_joint_pivot
+              right_caster_joint_roll"/>
+    
+  <!-- converts joint states to TF transforms -->
+  <node name="robot_state_publisher" 
+        pkg="robot_state_publisher" 
+        type="robot_state_publisher" 
+        respawn="false" 
+        output="screen">
+		<!--the joint states is the output from the controller in the yaml file-->
+        <remap from="joint_states" to="/jimmy_ns/joint_states"/>
+  </node>
+
+  <!--Launch the code that is responsible for the lidar motion in Gazebo.-->
+  <node name="gazebo_lidar_control_node" 
+        pkg="jimmy_gazebo" 
+        type="gazebo_lidar_motion"/>
+
+
+</launch>

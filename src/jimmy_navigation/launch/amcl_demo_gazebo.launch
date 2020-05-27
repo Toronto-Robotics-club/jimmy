@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Run the map server -->
+  <arg name="map_file" default="$(find jimmy_navigation)/maps/gazebo_maps/good_map.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!--this fixes the map from jumping around when in Gazebo (if set to false) along
+        wiht setting publishtf in amcl.launch to false; 
+        but also breaks the amcl when using physical robot. See: 
+        https://answers.ros.org/question/352944/how-to-localize-diff-drive-robot-on-static-map-using-lidar/
+        for args-->
+  <node pkg="tf" type="static_transform_publisher" name="map_odom_broadcaster" 
+        args="0 0 0 0 0 0 map odom 100"/>
+
+  <!--- Run AMCL -->
+  <include file="$(find jimmy_navigation)/launch/amcl.launch" />
+
+  
+  <!--this fixes the map from jumping around when in Gazebo (set to false); 
+      but also breaks the amcl when using physical robot. See: 
+      https://answers.ros.org/question/352944/how-to-localize-diff-drive-robot-on-static-map-using-lidar/
+      this is 1/2 see amcl_demo.launch for the second part of this mess-->
+  <param name="amcl/tf_broadcast" value="false"/>
+
+     <!--- Run Move Base -->
+  <include file="$(find jimmy_navigation)/launch/move_base.launch" />
+
+
+</launch>

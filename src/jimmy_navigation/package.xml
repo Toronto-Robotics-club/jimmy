@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<package>
+  <name>jimmy_navigation</name>
+  <version>0.4.3</version>
+  <description> This package was lifted out of the Clearpath Husky git package,
+                and modified to work on Jimmy. Much of the Husky code was
+                stripped out, when it was not needed for the intended function,
+                and during tuning. This package leverages the ros navigation
+                stack to navigate the robot from point A to point B on a map.
+  </description>
+
+  <!--Husky authors -->
+  <author email="pmukherj@clearpathrobotics.com">Prasenjit Mukherjee</author>
+  <author email="paul@bovbel.com">Paul Bovbel</author>
+  <!--integrator of code for jimmy robot-->
+  <author email="TorontoRoboticsclub@protonmail.com">MO</author>
+
+  <maintainer email="TorontoRoboticsClub@protonmail.com">MO</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">https://torontoroboticsclub.com/</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roslaunch</build_depend>
+  <run_depend>amcl</run_depend>
+  <!-- Disabling till package is released -->
+  <!-- <run_depend>frontier_exploration</run_depend> -->
+  <run_depend>gmapping</run_depend>
+  <run_depend>map_server</run_depend>
+  <run_depend>move_base</run_depend>
+  <run_depend>navfn</run_depend>
+  <run_depend>base_local_planner</run_depend>
+  <run_depend>dwa_local_planner</run_depend>
+
+  <export>
+  </export>
+</package>

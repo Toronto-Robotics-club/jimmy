@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Run the map server -->
+  <arg name="map_file" default="$(find jimmy_navigation)/maps/better_apt_map_last.yaml"/>
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)" />
+
+  <!--- Run AMCL -->
+  <include file="$(find jimmy_navigation)/launch/amcl.launch" />
+  
+  
+  <remap from="cmd_vel" to="jimmy_mobile_base_controller/cmd_vel"/>
+
+  <!--- Run Move Base -->
+  <include file="$(find jimmy_navigation)/launch/move_base.launch" />
+
+</launch>

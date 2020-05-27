@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- This is the path to the URDF file-->
+  <arg name="model" default="$(find jimmy_description)/urdf/jimmy.xacro"/>
+  <arg name="gui" default="true" />
+
+  <!--Converts the xacro robot information to UDRF and use it as a robot_description 
+  parameter-->
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(arg model)"/>
+  
+  <!-- This is the path to the RVIZ config file -->
+  <arg name="rvizconfig" default="$(find jimmy_description)/rviz/jimmy.rviz" />
+
+  <param name="use_gui" value="$(arg gui)"/>
+
+  <!--Reads the robot model description, finds all joints, and publishes joint 
+  values to all nonfixed joints using GUI sliders. Since in Jan 2020, this node
+  is interfering with the actual joint statuses I am sending, I commented it out.
+  If commenting it out causes an issue, simply delete this. -->
+  <!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" /-->
+  
+  <!--Reads the current robot joint states and publishes the 3D poses of each 
+  robot link using the kinematics tree build from the URDF. The 3D pose of the 
+  robot is published as ROS tf (transform).-->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  
+  <!-- Show in Rviz -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="false" />
+
+</launch>

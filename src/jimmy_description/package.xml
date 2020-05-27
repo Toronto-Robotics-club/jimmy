@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<package>
+  <name>jimmy_description</name>
+  <version>0.0.1</version>
+
+  <description>
+    a URDF package describing the jimmy robot. If there are any issues please
+    let the maintainer know. I appriciate feedback.
+  </description>
+
+  <author> MO </author>
+
+  <maintainer email="TorontoRoboticsClub@protonmail.com"> MO </maintainer>
+
+  <url type="website">http://TorontoRoboticsClub.com</url>
+
+  <license>TODO</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <run_depend>roscpp</run_depend>
+
+  <build_depend>rviz</build_depend>
+    <run_depend>rviz</run_depend>
+
+  <build_depend>tf</build_depend>
+    <run_depend>tf</run_depend>
+
+  <build_depend>urdf</build_depend>
+   <run_depend>urdf</run_depend>
+
+  <build_depend>xacro</build_depend>
+  <run_depend>xacro</run_depend>
+
+  <run_depend>joint_state_publisher</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+
+</package>

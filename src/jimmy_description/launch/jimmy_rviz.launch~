@@ -1,0 +1,18 @@
+<launch>
+
+  <!-- This is the path to the URDF file -->
+  <arg name="model" default="$(find jimmy_description)/urdf/jimmy.urdf"/>
+  <arg name="gui" default="true" />
+  
+  <!-- This is the path to the RVIZ config file -->
+  <arg name="rvizconfig" default="$(find jimmy_description)/rviz/config.rviz" />
+
+  <!--define the location of the URDF file in the parameter server-->
+  <param name="robot_description" command="cat $(find jimmy_description)/urdf/jimmy.urdf"/>
+
+  <param name="use_gui" value="$(arg gui)"/>
+  
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+</launch>

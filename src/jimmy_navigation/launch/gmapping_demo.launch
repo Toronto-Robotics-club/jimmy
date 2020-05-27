@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<launch>
+
+  <include file="$(find jimmy_navigation)/launch/gmapping.launch" />
+
+  <include file="$(find jimmy_navigation)/launch/move_base.launch" />
+
+</launch>
